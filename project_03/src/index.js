@@ -3,43 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import {combineReducers, createStore} from 'redux';
+import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {Provider, connect} from 'react-redux';
-
-const addTodoAct = (name) => {
-    return {
-        type: "ADD_TODO",
-        name
-    }
-}
-
-const deleteTodoAct = (id) => {
-    return {
-        type: "DELETE_TODO",
-        id
-    }
-}
-
-const toggleTodoAct = (id) => {
-    return {
-        type: "TOGGLE_TODO",
-        id
-    }
-}
-
-const filterTodoAct = (typeEvent) => {
-    return {
-        type: "FILTER_TODO",
-        typeEvent
-    }
-}
-
-const searchTodoAct = (keyword) => {
-    return {
-        type: "SEARCH_TODO",
-        keyword
-    }
-}
+import {createLogger} from 'redux-logger';
 
 const todos = [
     {
@@ -53,62 +19,6 @@ const todos = [
       isCompleted: true
     }
   ];
-
-//dung object
-const todoReducer = (state = {list: todos}, action) => {
-    
-    switch(action.type) {
-
-        case "ADD_TODO": {
-            
-            let id = new Date().valueOf();
-            let todo = {
-                id: id + 1,
-                name: action.name,
-                isCompleted: false
-            }
-
-            
-            let newState = {
-                ...state, //luu toan bo du lieu co trong state
-                list: [todo, ...state.list]
-            }
-
-            return newState;
-        }
-        case "DELETE_TODO": {
-            let id = action.id;
-            console.log(state);
-            return {
-                ...state,
-                list: state.list.filter((todo) => {
-                    return todo.id !== id
-                })
-            }
-        }
-
-        case "TOGGLE_TODO": {
-            let id = action.id;
-            let index = state.list.findIndex((todo) => {
-                return todo.id === id
-            });
-
-            let list = [...state.list];
-            let isCompleted = list[index].isCompleted;
-            console.log(isCompleted);
-            list[index].isCompleted = !isCompleted;
-
-            return {
-                ...state,
-                list: list
-            }
-        }
-
-        default: return state;
-    }
-    
-
-}
 
 const initFilter = {
     typeEvent: ''
@@ -141,11 +51,7 @@ const keywordReducer = (state = initSearch, action) => {
     }
 }
 
-let reducer = combineReducers({
-    todos: todoReducer,
-    filter: filterReducer,
-    search: keywordReducer
-});
+
 
 const mapStateToProps = (state= initSearch, ownProps) => {
     return {
@@ -183,7 +89,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const AppcContainer = connect(mapStateToProps, mapDispatchToProps)(App);
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(createLogger()));
 
 ReactDOM.render(<Provider
     store = {store}

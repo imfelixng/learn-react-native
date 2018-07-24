@@ -1,0 +1,7 @@
+export const OPEN_FORM = "OPEN_FORM";
+export const CLOSE_FORM = "CLOSE_FORM";
+export const FILTER_PRODUCT = "FILTER_PRODUCT";
+export const ADD_PRODUCT = "ADD_PRODUCT";
+export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export const SHOW_EDIT_PRODUCT = "SHOW_EDIT_PRODUCT";
+export const EDIT_PRODUCT = "EDIT_PRODUCT";
